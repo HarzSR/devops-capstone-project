@@ -51,16 +51,16 @@ spec:
       runAfter:
         - clone
 
-    - name: build
+    - name: tests
       workspaces:
         - name: source
           workspace: pipeline-workspace
       taskRef:
-        name: buildah
-        kind: ClusterTask
+        name: nose
       params:
-      - name: IMAGE
-        value: "$(params.build-image)"
+      - name: database_uri
+        value: "sqlite:///test.db"
+      - name: args
+        value: "-v --with-spec --spec-color"
       runAfter:
-        - tests
-        - lint
+        - clone
