@@ -57,14 +57,14 @@ def create_accounts():
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
 
-
 ######################################################################
 # LIST ALL ACCOUNTS
 ######################################################################
 @app.route("/accounts", methods=["GET"])
 def list_accounts():
     """
-    List all accounts
+    List all Accounts
+    This endpoint will list all Accounts
     """
     app.logger.info("Request to list Accounts")
 
@@ -81,14 +81,13 @@ def list_accounts():
 @app.route("/accounts/<int:account_id>", methods=["GET"])
 def get_accounts(account_id):
     """
-    Read an account based on the account_id
+    Reads an Account
+    This endpoint will read an Account based the account_id that is requested
     """
     app.logger.info("Request to read an Account with id: %s", account_id)
-
     account = Account.find(account_id)
     if not account:
         abort(status.HTTP_404_NOT_FOUND, f"Account with id [{account_id}] could not be found.")
-
     return account.serialize(), status.HTTP_200_OK
 
 
@@ -98,7 +97,8 @@ def get_accounts(account_id):
 @app.route("/accounts/<int:account_id>", methods=["PUT"])
 def update_accounts(account_id):
     """
-    Update an account
+    Update an Account
+    This endpoint will update an Account based on the posted data
     """
     app.logger.info("Request to update an Account with id: %s", account_id)
 
@@ -111,14 +111,14 @@ def update_accounts(account_id):
 
     return account.serialize(), status.HTTP_200_OK
 
-
 ######################################################################
 # DELETE AN ACCOUNT
 ######################################################################
 @app.route("/accounts/<int:account_id>", methods=["DELETE"])
 def delete_accounts(account_id):
     """
-    Delete an account
+    Delete an Account
+    This endpoint will delete an Account based on the account_id that is requested
     """
     app.logger.info("Request to delete an Account with id: %s", account_id)
 
@@ -144,4 +144,3 @@ def check_content_type(media_type):
         status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
         f"Content-Type must be {media_type}",
     )
-

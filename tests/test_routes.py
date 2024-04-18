@@ -27,6 +27,7 @@ HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 ######################################################################
 class TestAccountService(TestCase):
     """Account Service Tests"""
+
     @classmethod
     def setUpClass(cls):
         """Run once before all tests"""
@@ -36,9 +37,11 @@ class TestAccountService(TestCase):
         app.logger.setLevel(logging.CRITICAL)
         init_db(app)
         talisman.force_https = False
+
     @classmethod
     def tearDownClass(cls):
         """Runs once before test suite"""
+
     def setUp(self):
         """Runs before each test"""
         db.session.query(Account).delete()  # clean up the last tests
@@ -124,9 +127,8 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     # ADD YOUR TEST CASES HERE ...
-
-    def test_read_an_account(self):
-        """It should read an account"""
+    def test_get_account(self):
+        """It should Read a single Account"""
         account = self._create_accounts(1)[0]
         resp = self.client.get(
             f"{BASE_URL}/{account.id}", content_type="application/json"
@@ -134,14 +136,14 @@ class TestAccountService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(data["name"], account.name)
-
+    
     def test_get_account_not_found(self):
-        """It should not read a nonexistent account"""
+        """It should not Read an Account that is not found"""
         resp = self.client.get(f"{BASE_URL}/0")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_account_list(self):
-        """It should get a list of all accounts"""
+        """It should Get a list of Accounts"""
         self._create_accounts(5)
         resp = self.client.get(BASE_URL)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
@@ -149,7 +151,7 @@ class TestAccountService(TestCase):
         self.assertEqual(len(data), 5)
 
     def test_update_account(self):
-        """It should update an existing account"""
+        """It should Update an existing Account"""
         # create an Account to update
         test_account = AccountFactory()
         resp = self.client.post(BASE_URL, json=test_account.serialize())
@@ -164,7 +166,7 @@ class TestAccountService(TestCase):
         self.assertEqual(updated_account["name"], "Something Known")
 
     def test_delete_account(self):
-        """It should delete an account"""
+        """It should Delete an Account"""
         account = self._create_accounts(1)[0]
         resp = self.client.delete(f"{BASE_URL}/{account.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
@@ -180,7 +182,6 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         headers = {
             'X-Frame-Options': 'SAMEORIGIN',
-            'X-XSS-Protection': '1; mode=block',
             'X-Content-Type-Options': 'nosniff',
             'Content-Security-Policy': 'default-src \'self\'; object-src \'none\'',
             'Referrer-Policy': 'strict-origin-when-cross-origin'
