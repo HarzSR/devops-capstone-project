@@ -36,11 +36,9 @@ class TestAccountService(TestCase):
         app.logger.setLevel(logging.CRITICAL)
         init_db(app)
         talisman.force_https = False
-
     @classmethod
     def tearDownClass(cls):
         """Runs once before test suite"""
-
     def setUp(self):
         """Runs before each test"""
         db.session.query(Account).delete()  # clean up the last tests
